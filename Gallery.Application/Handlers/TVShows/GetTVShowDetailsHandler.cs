@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Domain.Models;
+using Gallery.Application.Dtos;
 using Gallery.Application.Queries;
-using Gallery.Shared.Dtos;
+using Gallery.Domain;
 using MediatR;
 using RestSharp;
 using System.Threading;
@@ -24,9 +24,9 @@ namespace Gallery.Application.Handlers
         {
             var request = new RestRequest(query.Query + "/" + query.ShowId)
                 .AddParameter("api_key", query.ApiKey);
-            var response = await _client.GetAsync<TVShowDetails>(request);
+            var response = await _client.GetAsync<TVShowDetailsToGet>(request);
 
-            return _mapper.Map<TVShowDetails, TVShowDetailsDTO>(response);
+            return _mapper.Map<TVShowDetailsToGet, TVShowDetailsDTO>(response);
         }
     }
 }

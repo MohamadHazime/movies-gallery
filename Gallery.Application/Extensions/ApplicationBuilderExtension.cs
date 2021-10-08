@@ -1,5 +1,5 @@
-﻿using Domain.Models;
-using FluentValidation;
+﻿using FluentValidation;
+using Gallery.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;

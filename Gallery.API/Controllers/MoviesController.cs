@@ -1,6 +1,10 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Gallery.Application.Commands;
+using Gallery.Application.Dtos;
 using Gallery.Application.Queries;
+using Gallery.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,8 +24,8 @@ namespace Gallery.API.Controllers
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetById(
-            [FromHeader(Name = "api-key")] string api_key, 
-            [FromQuery(Name = "movies-query")] string movies_query,  
+            [FromHeader(Name = "api-key")] string api_key,
+            [FromQuery(Name = "movies-query")] string movies_query,
             int id)
         {
             var query = new GetMovieDetailsQuery
@@ -33,12 +37,14 @@ namespace Gallery.API.Controllers
 
             var result = await _mediator.Send(query);
 
-            var command = new AddMovieDetailsCommand
-            {
-                ShowDetails = result
-            };
+            return Ok(result);
+        }
 
-            await _mediator.Send(command);
+        [HttpPost]
+        [Route("new")]
+        public async Task<IActionResult> Add([FromBody] AddMovieCommand movieCommand)
+        {
+            var result = await _mediator.Send(movieCommand);
 
             return Ok(result);
         }
@@ -46,7 +52,7 @@ namespace Gallery.API.Controllers
         [HttpGet]
         [Route("top-rated")]
         public async Task<IActionResult> GetTopRated(
-            [FromHeader(Name = "api-key")] string api_key, 
+            [FromHeader(Name = "api-key")] string api_key,
             [FromQuery(Name = "movies-query")] string movies_query)
         {
             var query = new GetTopRatedMoviesQuery
@@ -64,7 +70,7 @@ namespace Gallery.API.Controllers
         [HttpGet]
         [Route("genre/{id}")]
         public async Task<IActionResult> GetByGenre(
-            [FromHeader(Name = "api-key")] string api_key, 
+            [FromHeader(Name = "api-key")] string api_key,
             [FromQuery(Name = "movies-query")] string movies_query,
             [FromQuery(Name = "page")] int page,
             int id)
@@ -84,15 +90,13 @@ namespace Gallery.API.Controllers
                 Movies = result
             };
 
-            await _mediator.Send(command);
-
-            return Ok(result);
+            return await AddList(command);
         }
 
         [HttpGet]
         [Route("genre/{id}/top-rated")]
         public async Task<IActionResult> GetTopRatedByGenre(
-            [FromHeader(Name = "api-key")] string api_key, 
+            [FromHeader(Name = "api-key")] string api_key,
             [FromQuery(Name = "movies-query")] string movies_query,
             int id)
         {
@@ -105,6 +109,15 @@ namespace Gallery.API.Controllers
             };
 
             var result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("new-list")]
+        public async Task<IActionResult> AddList([FromBody] AddMoviesListCommand moviesListCommand)
+        {
+            var result = await _mediator.Send(moviesListCommand);
 
             return Ok(result);
         }

@@ -33,12 +33,14 @@ namespace Gallery.API.Controllers
 
             var result = await _mediator.Send(query);
 
-            var command = new AddTVShowDetailsCommand
-            {
-                ShowDetails = result
-            };
+            return Ok(result);
+        }
 
-            await _mediator.Send(command);
+        [HttpPost]
+        [Route("new")]
+        public async Task<IActionResult> Add([FromBody] AddTVShowCommand tvShowCommand)
+        {
+            var result = await _mediator.Send(tvShowCommand);
 
             return Ok(result);
         }
@@ -84,9 +86,7 @@ namespace Gallery.API.Controllers
                 TvShows = result
             };
 
-            await _mediator.Send(command);
-
-            return Ok(result);
+            return await AddList(command);
         }
 
         [HttpGet]
@@ -105,6 +105,15 @@ namespace Gallery.API.Controllers
             };
 
             var result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("new-list")]
+        public async Task<IActionResult> AddList([FromBody] AddTVShowsListCommand tvShowsListCommand)
+        {
+            var result = await _mediator.Send(tvShowsListCommand);
 
             return Ok(result);
         }

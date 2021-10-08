@@ -1,4 +1,4 @@
-﻿using Domain.Models;
+﻿using Gallery.Domain;
 using MediatR;
 
 namespace Gallery.Application.Queries

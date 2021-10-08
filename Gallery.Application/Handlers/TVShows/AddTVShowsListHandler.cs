@@ -1,6 +1,8 @@
-﻿using Gallery.Application.Commands;
+﻿using AutoMapper;
+using Gallery.Application.Commands;
+using Gallery.Application.Dtos;
+using Gallery.Domain;
 using Gallery.Infrastructure.Repositories;
-using Gallery.Shared.Dtos;
 using MediatR;
 using System.Collections.Generic;
 using System.Threading;
@@ -10,16 +12,22 @@ namespace Gallery.Application.Handlers
 {
     public class AddTVShowsListHandler : IRequestHandler<AddTVShowsListCommand, List<ShowDTO>>
     {
-        private readonly IMongoShowsRepository<TVShowDetailsDTO> _mongoTVShowsService;
+        private readonly IMongoShowsRepository<TVShowToAdd> _mongoTVShowsService;
+        private readonly IMapper _mapper;
 
-        public AddTVShowsListHandler(IMongoShowsRepository<TVShowDetailsDTO> mongoTVShowsService)
+        public AddTVShowsListHandler(IMongoShowsRepository<TVShowToAdd> mongoTVShowsService, IMapper mapper)
         {
             _mongoTVShowsService = mongoTVShowsService;
+            _mapper = mapper;
         }
 
         public async Task<List<ShowDTO>> Handle(AddTVShowsListCommand request, CancellationToken cancellationToken)
         {
-            return await _mongoTVShowsService.AddAllAsync(request.TvShows);
+            var tvShowsList = _mapper.Map<List<ShowDTO>, List<TVShowToAdd>>(request.TvShows);
+
+            await _mongoTVShowsService.AddAllAsync(tvShowsList);
+
+            return request.TvShows;
         }
     }
 }

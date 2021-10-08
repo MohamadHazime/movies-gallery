@@ -1,6 +1,6 @@
-﻿using Domain.Models;
-using Gallery.Shared.Dtos;
-using Microsoft.Extensions.Options;
+﻿using Common;
+using Gallery.Domain;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -8,20 +8,32 @@ using System.Threading.Tasks;
 
 namespace Gallery.Infrastructure.Repositories
 {
-    public class MongoMoviesRepository : IMongoShowsRepository<MovieDetailsDTO>
+    public class MongoMoviesRepository : IMongoShowsRepository<MovieToAdd>
     {
-        private readonly IMongoCollection<ShowDTO> _movies;
-        private readonly IMongoCollection<ShowDetailsDTO> _movieDetails;
+        private const string moviesCollectionName = "movies";
+        private readonly IMongoCollection<MovieToAdd> _movies;
 
-        public MongoMoviesRepository(IOptions<MongoDBSettings> moviesDbSettings, IMongoClient client)
+        public MongoMoviesRepository(IMongoClient client)
         {
-            _movies = client.GetDatabase(moviesDbSettings.Value.DatabaseName)
-                .GetCollection<ShowDTO>(moviesDbSettings.Value.MoviesCollectionName);
-            _movieDetails = client.GetDatabase(moviesDbSettings.Value.DatabaseName)
-                .GetCollection<ShowDetailsDTO>(moviesDbSettings.Value.MovieDetailsCollectionName);
+            _movies = client.GetDatabase(DatabaseNames.MoviesDB)
+                .GetCollection<MovieToAdd>(moviesCollectionName);
         }
 
-        public async Task<List<ShowDTO>> AddAllAsync(List<ShowDTO> list)
+        public async Task<MovieToAdd> AddAsync(MovieToAdd item)
+        {
+            if (string.IsNullOrEmpty(item.Id))
+            {
+                item.Id = ObjectId.GenerateNewId().ToString();
+            }
+
+            item.ReleaseDate = string.Format("{0:dd-MM-yyyy}", DateTimeOffset.UtcNow);
+
+            await _movies.InsertOneAsync(item);
+
+            return item;
+        }
+
+        public async Task<List<MovieToAdd>> AddAllAsync(List<MovieToAdd> list)
         {
             try
             {
@@ -37,18 +49,6 @@ namespace Gallery.Infrastructure.Repositories
             }
 
             return list;
-        }
-
-        public async Task<MovieDetailsDTO> AddDetailsAsync(MovieDetailsDTO showDetails)
-        {
-            var movie = await _movieDetails.FindOneAndReplaceAsync(m => m.Id == showDetails.Id, showDetails);
-
-            if(movie == null)
-            {
-                await _movieDetails.InsertOneAsync(showDetails);
-            }
-
-            return showDetails;
         }
     }
 }

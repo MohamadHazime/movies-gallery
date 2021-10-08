@@ -1,4 +1,4 @@
-﻿using Gallery.Shared.Dtos;
+﻿using Gallery.Application.Dtos;
 
 namespace Gallery.Application.Queries
 {

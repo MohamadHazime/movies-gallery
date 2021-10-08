@@ -1,6 +1,7 @@
 using AutoMapper;
-using Domain.Models;
-using Gallery.Shared.Dtos;
+using Gallery.Application.Commands;
+using Gallery.Application.Dtos;
+using Gallery.Domain;
 
 namespace Gallery.Application.Helpers
 {
@@ -8,19 +9,23 @@ namespace Gallery.Application.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<Movie, ShowDTO>()
+            CreateMap<MovieToGet, ShowDTO>()
                 .ForMember(dest => dest.OriginCountry, options => options.MapFrom(src => src.OriginalLanguage));
-            CreateMap<TVShow, ShowDTO>()
+            CreateMap<TVShowToGet, ShowDTO>()
                 .ForMember(dest => dest.Title, options => options.MapFrom(src => src.Name))
                 .ForMember(dest => dest.ReleaseDate, options => options.MapFrom(src => src.FirstAirDate))
                 .ForMember(dest => dest.OriginCountry, options => options.MapFrom(src => 
                     src.OriginCountry.Count == 0 ? src.OriginalLanguage : src.OriginCountry[0]));
-            CreateMap<MovieDetails, MovieDetailsDTO>()
+            CreateMap<MovieDetailsToGet, MovieDetailsDTO>()
                 .ForMember(dest => dest.OriginCountry, options => options.MapFrom(src => src.OriginalLanguage));
-            CreateMap<TVShowDetails, TVShowDetailsDTO>()
+            CreateMap<TVShowDetailsToGet, TVShowDetailsDTO>()
                 .ForMember(dest => dest.Title, options => options.MapFrom(src => src.Name))
                 .ForMember(dest => dest.ReleaseDate, options => options.MapFrom(src => src.FirstAirDate))
                 .ForMember(dest => dest.OriginCountry, options => options.MapFrom(src => src.OriginCountry[0]));
+            CreateMap<AddMovieCommand, MovieToAdd>();
+            CreateMap<AddTVShowCommand, TVShowToAdd>();
+            CreateMap<ShowDTO, MovieToAdd>();
+            CreateMap<ShowDTO, TVShowToAdd>();
         }
     }
 }

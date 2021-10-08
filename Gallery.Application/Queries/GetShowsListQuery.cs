@@ -1,5 +1,5 @@
-﻿using Domain.Models;
-using Gallery.Shared.Dtos;
+﻿using Gallery.Application.Dtos;
+using Gallery.Domain;
 using MediatR;
 using System.Collections.Generic;
 

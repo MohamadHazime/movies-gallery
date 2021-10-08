@@ -12,8 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using System;
-using Domain.Models;
-using Gallery.Shared.Dtos;
+using Gallery.Domain;
 
 namespace Gallery.API
 {
@@ -29,17 +28,12 @@ namespace Gallery.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<MongoDBSettings>(Configuration.GetSection("MoviesDBSettings"));
-
-            services.AddSingleton<IMongoClient>(serviceProvider =>
-            {
-                return new MongoClient(Configuration["ConnectionString"]);
-            });
+            services.AddMongoDb(Configuration);
 
             services.AddAutoMapper(typeof(AutoMapperProfile));
 
-            services.AddSingleton<IMongoShowsRepository<MovieDetailsDTO>, MongoMoviesRepository>();
-            services.AddSingleton<IMongoShowsRepository<TVShowDetailsDTO>, MongoTVShowsRepository>();
+            services.AddSingleton<IMongoShowsRepository<MovieToAdd>, MongoMoviesRepository>();
+            services.AddSingleton<IMongoShowsRepository<TVShowToAdd>, MongoTVShowsRepository>();
 
             services.AddControllers();
 
@@ -81,6 +75,14 @@ namespace Gallery.API
             {
                 endpoints.MapControllers();
             });
+        }
+    }
+
+    static class CustomExtensionsMethods
+    {
+        public static void AddMongoDb(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(configuration.GetConnectionString("MongoDb")));
         }
     }
 }

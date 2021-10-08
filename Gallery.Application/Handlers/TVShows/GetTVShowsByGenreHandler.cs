@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Domain.Models;
+using Gallery.Application.Dtos;
 using Gallery.Application.Queries;
-using Gallery.Shared.Dtos;
+using Gallery.Domain;
 using MediatR;
 using RestSharp;
 using System.Collections.Generic;
@@ -47,7 +47,7 @@ namespace Gallery.Application.Handlers
                 }
             }
 
-            return _mapper.Map<List<TVShow>, List<ShowDTO>>(tvShows);
+            return _mapper.Map<List<TVShowToGet>, List<ShowDTO>>(tvShows);
         }
     }
 }
