@@ -23,39 +23,41 @@ namespace Gallery.Application.Handlers
 
         public async Task<List<ShowDTO>> Handle(GetTopRatedMoviesByGenreQuery query, CancellationToken cancellationToken)
         {
-            var movies = new List<MovieToGet>();
-            int page = query.Page;
+            //var movies = new List<MovieToGet>();
+            //int page = query.Page;
 
-            while (movies.Count < 3)
-            {
-                var request = new RestRequest(query.Query)
-                    .AddParameter("api_key", query.ApiKey)
-                    .AddParameter("page", page);
-                var response = await _client.GetAsync<MoviesResponse>(request);
+            //while (movies.Count < 3)
+            //{
+            //    var request = new RestRequest(query.Query)
+            //        .AddParameter("api_key", query.ApiKey)
+            //        .AddParameter("page", page);
+            //    var response = await _client.GetAsync<MoviesResponse>(request);
 
-                movies.AddRange(response.Results.FindAll((movie) => movie.GenreIds.Contains(query.GenreId)));
+            //    movies.AddRange(response.Results.FindAll((movie) => movie.GenreIds.Contains(query.GenreId)));
 
-                page++;
-            }
+            //    page++;
+            //}
 
-            movies = movies.GetRange(0, 3);
+            //movies = movies.GetRange(0, 3);
 
-            var genresList = await MoviesGenres.GetGenresList(query.ApiKey);
+            //var genresList = await MoviesGenres.GetGenresList(query.ApiKey);
 
-            foreach (var movie in movies)
-            {
-                movie.Genres = new List<string>();
-                foreach (var genreId in movie.GenreIds)
-                {
-                    var genre = genresList.Find((gnr) => gnr.Id == genreId);
-                    if (genre != null)
-                    {
-                        movie.Genres.Add(genre.Name);
-                    }
-                }
-            }
+            //foreach (var movie in movies)
+            //{
+            //    movie.Genres = new List<string>();
+            //    foreach (var genreId in movie.GenreIds)
+            //    {
+            //        var genre = genresList.Find((gnr) => gnr.Id == genreId);
+            //        if (genre != null)
+            //        {
+            //            movie.Genres.Add(genre.Name);
+            //        }
+            //    }
+            //}
 
-            return _mapper.Map<List<MovieToGet>, List<ShowDTO>>(movies);
+            //return _mapper.Map<List<MovieToGet>, List<ShowDTO>>(movies);
+
+            return null;
         }
     }
 }

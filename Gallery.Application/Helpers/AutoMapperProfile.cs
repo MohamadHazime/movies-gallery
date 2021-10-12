@@ -2,6 +2,7 @@ using AutoMapper;
 using Gallery.Application.Commands;
 using Gallery.Application.Dtos;
 using Gallery.Domain;
+using Gallery.Domain.AggregatesModel.MovieAggregate;
 
 namespace Gallery.Application.Helpers
 {
@@ -26,6 +27,9 @@ namespace Gallery.Application.Helpers
             CreateMap<AddTVShowCommand, TVShowToAdd>();
             CreateMap<ShowDTO, MovieToAdd>();
             CreateMap<ShowDTO, TVShowToAdd>();
+
+            CreateMap<Movie, ShowDTO>()
+                .ForMember(dest => dest.OriginCountry, options => options.MapFrom(src => src.OriginalLanguage));
         }
     }
 }

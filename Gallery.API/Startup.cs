@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using System;
+using Gallery.Domain.AggregatesModel.MovieAggregate;
 using Gallery.Domain;
 
 namespace Gallery.API
@@ -34,6 +35,7 @@ namespace Gallery.API
 
             services.AddSingleton<IMongoShowsRepository<MovieToAdd>, MongoMoviesRepository>();
             services.AddSingleton<IMongoShowsRepository<TVShowToAdd>, MongoTVShowsRepository>();
+            services.AddSingleton<IMovieRepository, MovieRepository>();
 
             services.AddControllers();
 

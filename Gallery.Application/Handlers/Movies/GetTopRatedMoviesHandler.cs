@@ -23,29 +23,31 @@ namespace Gallery.Application.Handlers
 
         public async Task<List<ShowDTO>> Handle(GetTopRatedMoviesQuery query, CancellationToken cancellationToken)
         {
-            var request = new RestRequest(query.Query)
-                .AddParameter("api_key", query.ApiKey)
-                .AddParameter("page", query.Page);
-            var response = await _client.GetAsync<MoviesResponse>(request);
+            //var request = new RestRequest(query.Query)
+            //    .AddParameter("api_key", query.ApiKey)
+            //    .AddParameter("page", query.Page);
+            //var response = await _client.GetAsync<MoviesResponse>(request);
 
-            var movies = response.Results.GetRange(0, 6);
+            //var movies = response.Results.GetRange(0, 6);
 
-            var genresList = await MoviesGenres.GetGenresList(query.ApiKey);
+            //var genresList = await MoviesGenres.GetGenresList(query.ApiKey);
 
-            foreach (var movie in movies)
-            {
-                movie.Genres = new List<string>();
-                foreach (var genreId in movie.GenreIds)
-                {
-                    var genre = genresList.Find((gnr) => gnr.Id == genreId);
-                    if (genre != null)
-                    {
-                        movie.Genres.Add(genre.Name);
-                    }
-                }
-            }
+            //foreach (var movie in movies)
+            //{
+            //    movie.Genres = new List<string>();
+            //    foreach (var genreId in movie.GenreIds)
+            //    {
+            //        var genre = genresList.Find((gnr) => gnr.Id == genreId);
+            //        if (genre != null)
+            //        {
+            //            movie.Genres.Add(genre.Name);
+            //        }
+            //    }
+            //}
 
-            return _mapper.Map<List<MovieToGet>, List<ShowDTO>>(movies);
+            //return _mapper.Map<List<MovieToGet>, List<ShowDTO>>(movies);
+
+            return null;
         }
     }
 }

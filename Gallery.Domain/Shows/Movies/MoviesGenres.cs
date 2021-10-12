@@ -1,3 +1,4 @@
+using Gallery.Domain.AggregatesModel.MovieAggregate;
 using RestSharp;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,9 +7,9 @@ namespace Gallery.Domain
 {
     public class MoviesGenres
     {
-        private static List<GenreToGet> genres = null;
+        private static List<Genre> genres = null;
 
-        public async static Task<List<GenreToGet>> GetGenresList(string apiKey)
+        public async static Task<List<Genre>> GetGenresList(string apiKey)
         {
             if(genres == null)
             {

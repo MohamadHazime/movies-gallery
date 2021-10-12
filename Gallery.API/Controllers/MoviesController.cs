@@ -42,8 +42,12 @@ namespace Gallery.API.Controllers
 
         [HttpPost]
         [Route("new")]
-        public async Task<IActionResult> Add([FromBody] AddMovieCommand movieCommand)
+        public async Task<IActionResult> Add(
+            [FromHeader(Name = "api-key")] string api_key, 
+            [FromBody] AddMovieCommand movieCommand)
         {
+            //movieCommand.SetApiKey(api_key);
+
             var result = await _mediator.Send(movieCommand);
 
             return Ok(result);
@@ -85,12 +89,14 @@ namespace Gallery.API.Controllers
 
             var result = await _mediator.Send(query);
 
-            var command = new AddMoviesListCommand
-            {
-                Movies = result
-            };
+            //var command = new AddMoviesListCommand
+            //{
+            //    Movies = result
+            //};
 
-            return await AddList(command);
+            //return await AddList(command);
+
+            return Ok(result);
         }
 
         [HttpGet]

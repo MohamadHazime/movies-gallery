@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Gallery.Application.Commands;
 using Gallery.Domain;
+using Gallery.Domain.AggregatesModel.MovieAggregate;
 using Gallery.Infrastructure.Repositories;
 using MediatR;
 using System;
@@ -11,22 +12,45 @@ using System.Threading.Tasks;
 
 namespace Gallery.Application.Handlers
 {
-    public class AddMovieHandler : IRequestHandler<AddMovieCommand, MovieToAdd>
+    public class AddMovieHandler : IRequestHandler<AddMovieCommand, Movie>
     {
-        private readonly IMongoShowsRepository<MovieToAdd> _mongoMoviesService;
+        private readonly IMovieRepository _moviesService;
         private readonly IMapper _mapper;
 
-        public AddMovieHandler(IMongoShowsRepository<MovieToAdd> mongoMoviesService, IMapper mapper)
+        public AddMovieHandler(IMovieRepository moviesService, IMapper mapper)
         {
-            _mongoMoviesService = mongoMoviesService;
+            _moviesService = moviesService;
             _mapper = mapper;
         }
 
-        public async Task<MovieToAdd> Handle(AddMovieCommand request, CancellationToken cancellationToken)
+        public async Task<Movie> Handle(AddMovieCommand request, CancellationToken cancellationToken)
         {
-            var movie = _mapper.Map<AddMovieCommand, MovieToAdd>(request);
+            var genres = new List<Genre>();
 
-            return await _mongoMoviesService.AddAsync(movie);
+            //var genresList = await MoviesGenres.GetGenresList(request.GetApiKey());
+
+            //foreach (var genreName in request.Genres)
+            //{
+            //    var genre = genresList.Find((gnr) => gnr.Name == genreName);
+
+            //    if(genre != null)
+            //    {
+            //        genres.Add(genre);
+            //    }
+            //}
+
+            var movie = new Movie(
+                null,
+                request.Title,
+                request.VoteAverage,
+                null,
+                request.OriginCountry,
+                request.Overview,
+                request.PosterPath,
+                genres
+            );
+
+            return await _moviesService.AddAsync(movie);
         }
     }
 }

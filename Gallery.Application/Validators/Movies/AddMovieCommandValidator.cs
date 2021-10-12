@@ -10,6 +10,8 @@ namespace Gallery.Application.Validators
     {
         public AddMovieCommandValidator()
         {
+            //RuleFor(x => x.GetApiKey()).Cascade(CascadeMode.Stop).NotNull().NotEmpty().OverridePropertyName("ApiKey");
+
             RuleFor(x => x.Title).Cascade(CascadeMode.Stop).NotNull().NotEmpty();
             RuleFor(x => x.VoteAverage).Cascade(CascadeMode.Stop).NotNull().GreaterThan(0).LessThanOrEqualTo(10);
             RuleFor(x => x.OriginCountry).Cascade(CascadeMode.Stop).NotNull().NotEmpty().Length(2);

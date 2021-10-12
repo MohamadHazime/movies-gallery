@@ -1,3 +1,4 @@
+using Gallery.Domain.AggregatesModel.MovieAggregate;
 using System.Collections.Generic;
 
 namespace Gallery.Application.Dtos
@@ -11,6 +12,6 @@ namespace Gallery.Application.Dtos
         public string Overview { get; set; }
         public string PosterPath { get; set; }
         public string ReleaseDate { get; set; }
-        public List<string> Genres { get; set; }
+        public List<Genre> Genres { get; set; }
     }
 }

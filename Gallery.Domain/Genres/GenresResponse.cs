@@ -1,9 +1,10 @@
+using Gallery.Domain.AggregatesModel.MovieAggregate;
 using System.Collections.Generic;
 
 namespace Gallery.Domain
 {
     class GenresResponse
     {
-        public List<GenreToGet> Genres { get; set; }
+        public List<Genre> Genres { get; set; }
     }
 }
