@@ -14,6 +14,8 @@ using MongoDB.Driver;
 using System;
 using Gallery.Domain.AggregatesModel.MovieAggregate;
 using Gallery.Domain;
+using Plain.RabbitMQ;
+using RabbitMQ.Client;
 
 namespace Gallery.API
 {
@@ -51,6 +53,13 @@ namespace Gallery.API
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
 
             services.AddValidatorsFromAssembly(assembly);
+
+            services.AddSingleton<IConnectionProvider>(new ConnectionProvider("amqp://guest:guest@localhost:5672"));
+            services.AddScoped<Plain.RabbitMQ.IPublisher>(x => 
+                new Publisher(
+                    x.GetService<IConnectionProvider>(), 
+                    "report-exchange", 
+                    ExchangeType.Topic));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

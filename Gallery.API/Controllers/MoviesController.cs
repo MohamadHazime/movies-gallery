@@ -7,6 +7,7 @@ using Gallery.Application.Queries;
 using Gallery.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Gallery.API.Controllers
 {
@@ -15,10 +16,12 @@ namespace Gallery.API.Controllers
     public class MoviesController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly Plain.RabbitMQ.IPublisher _publisher;
 
-        public MoviesController(IMediator mediator)
+        public MoviesController(IMediator mediator, Plain.RabbitMQ.IPublisher publisher)
         {
             _mediator = mediator;
+            _publisher = publisher;
         }
 
         [HttpGet]
@@ -88,6 +91,8 @@ namespace Gallery.API.Controllers
             };
 
             var result = await _mediator.Send(query);
+
+            _publisher.Publish(JsonConvert.SerializeObject(result), "report.movies", null);
 
             //var command = new AddMoviesListCommand
             //{
